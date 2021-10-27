@@ -1,0 +1,41 @@
+{
+  "name": "tgl",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Based on Three.js. Project for WebGL",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/troila-mobile/TGL.git"
+  },
+  "keywords": [
+    "three.js",
+    "three",
+    "tgl",
+    "troilagl"
+  ],
+  "author": "xuanhe",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/troila-mobile/TGL/issues"
+  },
+  "homepage": "https://github.com/troila-mobile/TGL#readme",
+  "dependencies": {
+    "@tweenjs/tween.js": "^18.6.4",
+    "melanke-watchjs": "^1.5.2",
+    "stats.js": "^0.17.0",
+    "three": "0.132.2",
+    "troila_outline": "^1.0.0",
+    "typescript": "^4.4.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@types/stats.js": "^0.17.0",
+    "@types/three": "^0.133.1",
+    "@types/uuid": "^8.3.1"
+  }
+}
