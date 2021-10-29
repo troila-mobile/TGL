@@ -1,11 +1,12 @@
 {
-  "name": "tgl",
+  "name": "troila-gl",
   "version": "1.0.0",
   "private": false,
   "description": "Based on Three.js. Project for WebGL",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && rollup -c rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -29,13 +30,23 @@
     "stats.js": "^0.17.0",
     "three": "0.132.2",
     "troila_outline": "^1.0.0",
-    "typescript": "^4.4.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@open-wc/building-rollup": "^2.0.1",
+    "@rollup/plugin-typescript": "^8.3.0",
     "@types/node": "^16.11.6",
     "@types/stats.js": "^0.17.0",
     "@types/three": "^0.133.1",
-    "@types/uuid": "^8.3.1"
-  }
+    "@types/uuid": "^8.3.1",
+    "deepmerge": "^4.2.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.58.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.4"
+  },
+  "files": [
+    "dist"
+  ]
 }

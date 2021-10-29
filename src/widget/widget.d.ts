@@ -1,6 +1,4 @@
 declare module 'melanke-watchjs' {
-    const WatchJS = {
-        watch: 'any'
-    } as any
+    const WatchJS: any
     export default WatchJS
 }
