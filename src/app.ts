@@ -31,7 +31,6 @@ export type { TreeStruct }
 interface AppProps {
     struct: TreeStruct[]
     background: string | number
-    animationCallback?: Function
 }
 
 export default class GLManager {

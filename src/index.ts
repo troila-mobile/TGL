@@ -1,27 +1,15 @@
-import App from "./app"
-import ClassType from "./classType"
-import BaseObject from "./baseObject"
-import Park from "./park"
-import Building from "./building"
-import Floor from "./floor"
-import Room from "./room"
-import Thing from "./thing"
-import Panel from "./widget/panel"
-import PanelTem from "./widget/panelTem"
-import PipeLine from "./pipeLine"
-import PipeLineInFloor from "./pipeLineInFloor"
-
-export {
-    App,
-    ClassType,
-    BaseObject,
-    Park,
-    Building,
-    Floor,
-    Room,
-    Thing,
-    Panel,
-    PanelTem,
-    PipeLine,
-    PipeLineInFloor
-}
+export { default as App } from "./app"
+export { default as ClassType } from "./classType"
+export { default as BaseObject } from "./baseObject"
+export { default as Park } from "./park"
+export { default as Building } from "./building"
+export { default as Floor } from "./floor"
+export { default as Room } from "./room"
+export { default as Thing } from "./thing"
+export { default as Panel } from "./widget/panel"
+export { default as PanelTem } from "./widget/panelTem"
+export { default as PipeLine } from "./pipeLine"
+export { default as PipeLineInFloor } from "./pipeLineInFloor"
+export { default as UIAnchor } from "./anchor"
+export { default as LevelEventType } from "./levelEventType"
+export * as THREE from "three"
