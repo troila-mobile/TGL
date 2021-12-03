@@ -43,7 +43,7 @@ export const recursiveObjectForUUID = (selectedObject: THREE.Object3D, objects: 
     const obj = objects.find((e) => {
         return e.model?.uuid === selectedObject.uuid
     })
-    if (obj && obj.model.name !== '顶层' && !obj.model.name.includes('Short_Wall') && !obj.model.name.includes('Long_Wall')) {
+    if (obj) {
         obj.func(obj.model)
         return
     }

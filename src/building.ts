@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import BaseObject from "./baseObject"
+import BaseObject, { onEnterViewParams } from "./baseObject"
 import ClassType from "./classType"
 import TWEEN from "@tweenjs/tween.js"
 import { LevelParams } from "./level"
@@ -25,13 +25,10 @@ export default class Building extends BaseObject {
     }
     onEnterLevel(initParams: any) {
         this.visible = true
-        this.floors.forEach((item) => {   
-            console.log('item=====>',item);
+        this.floors.forEach((item) => {
             this.initLocalPositionWithFloor[item.id] = item.localPosition
         })
     }
- 
-
     onLeaveLevel(params: LevelParams) {
         if (params.current.lodLevel < this.lodLevel) {
             this.visible = false
@@ -100,10 +97,11 @@ export default class Building extends BaseObject {
             })
             .start()
     }
-    onEnterView() {
+    onEnterView(params?: onEnterViewParams) {
         return super.onEnterView({
             xAngle: 45,
-            yAngle: 0
+            yAngle: 0,
+            ...(params || {}),
         })
     }
 }

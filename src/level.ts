@@ -194,17 +194,13 @@ export default class SceneLevel {
         if (this.current) {
             this.event.emit(LevelEventType.LeaveLevel, this.levelParams(obj))
             this.current.onLevelEvent(LevelEventType.LeaveLevel, this.levelParams(obj))
-            this.current.children.forEach((item) => {
-                item.release()
-            })
+            this.current.onRelease()
         }
         this.event.emit(LevelEventType.LevelChange, this.levelParams(obj))
         obj.onLevelEvent(LevelEventType.LevelChange, this.levelParams(obj))
         this.event.emit(LevelEventType.EnterLevel, this.levelParams(obj))
         obj.onLevelEvent(LevelEventType.EnterLevel, this.levelParams(obj))
-        obj.children.forEach((item) => {
-            item.load()
-        })
+        obj.onLoad()
         this.current = obj
         const junmpComplete = () => {
             this.event.emit(LevelEventType.LevelFlyEnd, this.levelParams(this.current!))

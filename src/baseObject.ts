@@ -1,7 +1,6 @@
 import * as THREE from "three"
 import ClassType from "./classType"
 import App from "./app"
-import { recursiveObjectForUUID } from "./utils"
 import LevelEventType from "./levelEventType"
 import { LevelParams } from "./level"
 import BaseStyle from "./baseStyle"
@@ -18,7 +17,6 @@ export default class BaseObject {
     parent: BaseObject | null = null
     style!: BaseStyle
     extraData: { [keys: string]: any } = {}
-    visible!: boolean
     size = 1
     // position: [x: number, y: number, z: number] = [0, 0, 0]
     public initParams: any = null
@@ -26,7 +24,18 @@ export default class BaseObject {
     private positionWithParent: [number, number, number] = [0, 0, 0]
     private selected = false
     protected app: App
-    private eventHandle: Array<() => void> = []
+    private pickerHandle: null | Function = null
+    private _pickable = true
+    private _visible = true
+    set pickable(bool: boolean) {
+        this._pickable = bool
+        if (!bool) {
+            this.cancelSelected()
+        }
+    }
+    get pickable() {
+        return this._pickable
+    }
     get localPosition() {
         return this.positionWithParent
     }
@@ -39,18 +48,15 @@ export default class BaseObject {
     get worldPosition() {
         return this.renderNode.getWorldPosition(new THREE.Vector3())
     }
+    get visible() {
+        return this._visible
+    }
+    set visible(val: boolean) {
+        this._visible = val
+        this.renderNode.visible = val
+    }
     constructor(app: App) {
         this.app = app
-        Object.defineProperties(this, {
-            "visible": {
-                get: () => {
-                    return this.renderNode.visible
-                },
-                set: (val) => {
-                    this.renderNode.visible = val
-                }
-            },
-        })
         this.handleDoubleClick = this.handleDoubleClick.bind(this)
         this.handleMove = this.handleMove.bind(this)
         this.handleClick = this.handleClick.bind(this)
@@ -71,76 +77,64 @@ export default class BaseObject {
             this.delegate.removeListener(eventType, callback)
         }
     }
-    // 需要处理非允许选中物体
-    load() {
-        this.eventHandle = [
-            this.app.picker.on('dblclick', this.handleDoubleClick),
-            this.app.picker.on('mousemove', this.handleMove),
-            this.app.picker.on('click', this.handleClick)
-        ]
+    onLoad() {
+        this.children.forEach((item) => {
+            item.pickerWillLoad()
+        })
     }
-    handleDoubleClick(objects: THREE.Object3D[]) {
-        if (objects.length > 0 && this.node.visible === true && !this.app.cameraManager.flying) {
-            recursiveObjectForUUID(objects[0], [{
-                model: this.node,
-                func: () => {
-                    this.onDoubleClick()
-                }
-            }])
+    onRelease() {
+        this.children.forEach((item) => {
+            item.pickerWillUnload()
+        })
+        this.app.picker.onLevelChange()
+    }
+    pickerWillLoad() {
+        this.pickerHandle = this.app.picker.on({
+            'dblclick': this.handleDoubleClick,
+            'click': this.handleClick,
+            'mousemove': this.handleMove
+        }, this.node)
+    }
+    pickerWillUnload() {
+        if (this.selected) {
+            this.cancelSelected()
+        }
+        if (this.pickerHandle) {
+            this.pickerHandle()
+            this.pickerHandle = null
+        }
+    }
+    handleDoubleClick(active: boolean) {
+        if (active && !this.app.cameraManager.flying) {
+            this.onDoubleClick()
         }
     }
     onDoubleClick() {
         this.app.level.change(this)
     }
-    handleMove(objects: THREE.Object3D[]) {
-        if (this.app.level.current?.type !== ClassType.Building) {
-            if (objects.length > 0) {
-                recursiveObjectForUUID(objects[0], [{
-                    model: this.node,
-                    func: () => {
-                        if (!this.selected) {
-                            this.app.effectComposer.addSelect(this)
-                        }
-                    }
-                }], () => {
-                    if (this.selected) {
-                        this.app.effectComposer.removeSelect(this)
-                    }
-                })
-            } else {
-                if (this.selected) {
-                    this.app.effectComposer.removeSelect(this)
-                }
+    handleMove(active: boolean) {
+        if (this.pickable) {
+            if (active && !this.selected) {
+                this.confirmSelected()
+            } else if (!active && this.selected) {
+                this.cancelSelected()
             }
         }
     }
-    handleClick(objects: THREE.Object3D[]) {
-        if (objects.length > 0 && this.node.visible === true) {
-            recursiveObjectForUUID(objects[0], [{
-                model: this.node,
-                func: () => {
-                    this.onClick()
-                }
-            }])
+    handleClick(active: boolean) {
+        if (active) {
+            this.onClick()
         }
     }
     onClick() {
 
     }
-    release() {
-        if (this.selected) {
-            this.app.effectComposer.removeSelect(this)
-        }
-        this.eventHandle.forEach((func) => {
-            func()
-        })
-        this.eventHandle = []
-    }
     viewDidLoad() {
         this.positionWithParent = this.renderNode.position.toArray()
         this.style = new BaseStyle(this.renderNode, this)
+        this._visible = this.renderNode.visible
         if (this.app.level.current && (this.app.level.current.id === this.parent?.id)) {
-            this.load()
+            this.pickerWillLoad()
         }
     }
     add(params: {
@@ -211,13 +205,7 @@ export default class BaseObject {
     onLevelFlyEnd() {
 
     }
-    onEnterView(params?: {
-        xAngle?: number
-        yAngle?: number
-        radiusFactor?: number
-        onComplete?: (e?: unknown) => void
-        targetOffset?: [x: number, y: number, z: number]
-    }) {
+    onEnterView(params?: onEnterViewParams) {
         return this.app.cameraManager.flyTo(this, {
             ...(params || {}),
         })
@@ -229,11 +217,26 @@ export default class BaseObject {
 
     }
     cancelSelected() {
+        const {
+            selected
+        } = this
         this.selected = false
-        this.onMouseOff()
+        this.app.effectComposer.removeSelect(this)
+        if (selected) {
+            this.onMouseOff()
+        }
     }
     confirmSelected() {
         this.selected = true
+        this.app.effectComposer.addSelect(this)
         this.onMouseOn()
     }
+}
+
+export interface onEnterViewParams {
+    xAngle?: number
+    yAngle?: number
+    radiusFactor?: number
+    onComplete?: (e?: unknown) => void
+    targetOffset?: [x: number, y: number, z: number]
 }

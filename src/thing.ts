@@ -1,4 +1,4 @@
-import BaseObject from "./baseObject"
+import BaseObject, { onEnterViewParams } from "./baseObject"
 import { LevelParams } from "./level"
 
 export default class Thing extends BaseObject {
@@ -23,8 +23,7 @@ export default class Thing extends BaseObject {
             item.style.opacity = 1
         })
     }
-
-    onEnterView(params?: { xAngle?: number; yAngle?: number; radiusFactor?: number, onComplete?: (e?: unknown) => void }) {
+    onEnterView(params?: onEnterViewParams) {
         return super.onEnterView({
             xAngle: 0,
             yAngle: 0,

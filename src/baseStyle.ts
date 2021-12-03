@@ -17,7 +17,6 @@ export default class BaseStyle {
                                 const resultOpacity = value / this.opacity * material.opacity
                                 material.transparent = (resultOpacity >= 1 ? false : true)
                                 material.opacity = resultOpacity
-                                material.transparent = true
                                 material.format = THREE.RGBAFormat
                             })
                         }

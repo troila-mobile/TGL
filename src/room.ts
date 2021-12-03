@@ -9,7 +9,7 @@ export default class Room extends BaseObject {
             item.style.opacity = 0.2
         })
         this.things.forEach((item) => {
-            item.load()
+            item.pickerWillLoad()
         })
     }
     onLeaveLevel(params: LevelParams) {
@@ -17,7 +17,7 @@ export default class Room extends BaseObject {
             item.style.opacity = 1
         })
         this.things.forEach((item) => {
-            item.release()
+            item.pickerWillUnload()
         })
     }
     get things() {

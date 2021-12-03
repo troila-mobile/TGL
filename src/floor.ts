@@ -1,11 +1,10 @@
 import { LevelParams } from "./level"
-import BaseObject from "./baseObject"
+import BaseObject, { onEnterViewParams } from "./baseObject"
 import ClassType from "./classType"
 
 export default class Floor extends BaseObject {
     type = ClassType.Floor
     onEnterLevel() {
-        console.log("item=>>>>>>>",this);
         this.brothers.forEach((item) => {
             item.visible = false
         })
@@ -23,10 +22,11 @@ export default class Floor extends BaseObject {
             })*/
         }
     }
-    onEnterView() {
+    onEnterView(params?: onEnterViewParams) {
         return super.onEnterView({
             yAngle: 50,
-            radiusFactor: 2.5
+            radiusFactor: 2.5,
+            ...(params || {}),
         })
     }
 }

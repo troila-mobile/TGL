@@ -25,4 +25,10 @@ export default class Renderer {
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(document.body.clientWidth, document.body.clientHeight)
     }
+    showStats() {
+        this.stats.dom.style.display = 'block'
+    }
+    hideStats() {
+        this.stats.dom.style.display = 'none'
+    }
 }
