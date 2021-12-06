@@ -8,18 +8,12 @@ export default class Floor extends BaseObject {
         this.brothers.forEach((item) => {
             item.visible = false
         })
-        this.children.forEach((item) => {
-            item.visible = true
-        })
     }
     onLeaveLevel(params: LevelParams) {
         if (params.current.lodLevel <= this.lodLevel) {
             this.brothers.forEach((item) => {
                 item.visible = true
             })
-            /*this.children.forEach((item) => {
-                item.visible = false
-            })*/
         }
     }
     onEnterView(params?: onEnterViewParams) {

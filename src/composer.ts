@@ -85,14 +85,12 @@ export default class Composer {
         this.selectedObjects = []
         this.selectedObjects.forEach((e) => {
             this.disableOutline(e.node)
-            e.cancelSelected()
         })
     }
     addSelect(obj: BaseObject) {
         if (!this.selectedObjects.find((item) => item.id === obj.id)) {
             this.selectedObjects.push(obj)
             this.enableOutline(obj.node)
-            obj.confirmSelected()
         }
     }
     removeSelect(obj: BaseObject) {
@@ -100,7 +98,6 @@ export default class Composer {
         if (index !== -1) {
             this.selectedObjects.splice(index, 1)
             this.disableOutline(obj.node)
-            obj.cancelSelected()
         }
     }
     private enableOutline(obj: THREE.Object3D) {
