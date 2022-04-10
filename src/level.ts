@@ -1,4 +1,4 @@
-import THREE from "three"
+import * as THREE from "three"
 import SceneRoot from "./sceneRoot"
 import Park from "./park"
 import Building from "./building"

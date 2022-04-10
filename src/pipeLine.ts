@@ -1,5 +1,7 @@
 import * as THREE from "three"
 import { BaseObject } from "."
+import aLineType from "./assets/aLineType.png"
+import bLineType from "./assets/bLineType.png"
 
 export default class PipeLine {
     private pipeLine!: THREE.Mesh
@@ -23,7 +25,7 @@ export default class PipeLine {
 
     creatLines(startDevice: BaseObject, endDevice: BaseObject, lineName: string, scene: THREE.Scene, isFlow?: boolean) {
         const loader = new THREE.TextureLoader();
-        const lineColor = lineName === 'A路' ? require('./assets/aLineType.png').default : require('./assets/bLineType.png').default
+        const lineColor = lineName === 'A路' ? aLineType : bLineType
         loader.load(lineColor, (texture) => {
             const Vector3Array: THREE.Vector3[] = this.getPositions(startDevice, endDevice, lineName)
 

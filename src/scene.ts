@@ -1,10 +1,25 @@
 import * as THREE from "three"
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 import App from './app'
 
-const ImageArrayByPath = (path: string) => {
-    return ["posx.jpg", "negx.jpg", "posy.jpg", "negy.jpg", "posz.jpg", "negz.jpg"].map((name) => require(`./environment/${path}/${name}`).default)
-}
+import darkposx from "./environment/dark-skybox/posx.jpg"
+import darknegx from "./environment/dark-skybox/negx.jpg"
+import darkposy from "./environment/dark-skybox/posy.jpg"
+import darknegy from "./environment/dark-skybox/negy.jpg"
+import darkposz from "./environment/dark-skybox/posz.jpg"
+import darknegz from "./environment/dark-skybox/negz.jpg"
+
+import lightposx from "./environment/light-skybox/posx.jpg"
+import lightnegx from "./environment/light-skybox/negx.jpg"
+import lightposy from "./environment/light-skybox/posy.jpg"
+import lightnegy from "./environment/light-skybox/negy.jpg"
+import lightposz from "./environment/light-skybox/posz.jpg"
+import lightnegz from "./environment/light-skybox/negz.jpg"
+
+import sunset from "./environment/venice_sunset_1k.hdr"
+
+console.log('sunset', sunset);
+
 
 export type skyBoxs = 'light' | 'dark'
 
@@ -12,8 +27,8 @@ export default class Scene {
     scene: THREE.Scene
     cubeLoader = new THREE.CubeTextureLoader()
     skyBoxs = {
-        'light': ImageArrayByPath('light-skybox'),
-        'dark': ImageArrayByPath('dark-skybox')
+        'light': [lightposx, lightnegx, lightposy, lightnegy, lightposz, lightnegz],
+        'dark': [darkposx, darknegx, darkposy, darknegy, darkposz, darknegz]
     }
     skybox: skyBoxs = 'dark'
     app: App
@@ -29,7 +44,7 @@ export default class Scene {
         this.scene.add(this.app.cameraManager.camera)
         new RGBELoader()
             .setDataType(THREE.UnsignedByteType)
-            .load(require('./environment/venice_sunset_1k.hdr').default, (texture) => {
+            .load(sunset, (texture) => {
                 const pmremGenerator = new THREE.PMREMGenerator(this.app.rendererManager.renderer);
                 pmremGenerator.compileEquirectangularShader();
                 const envMap = pmremGenerator.fromEquirectangular(texture).texture;
